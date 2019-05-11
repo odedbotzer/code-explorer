@@ -1,0 +1,22 @@
+<idea-plugin>
+  <id>org.jetbrains</id>
+  <name>File Follower Project</name>
+  <version>0.0.1</version>
+  <vendor email="dummy" url="dummy">dummy</vendor>
+
+  <depends>com.intellij.modules.lang</depends>
+
+  <description>follow file names</description>
+  <extensions defaultExtensionNs="com.intellij">
+    <editorTabTitleProvider implementation="upper.filefollower.EditorTabFollower" />
+  </extensions>
+
+  <actions>
+    <group id="MyPlugin.SampleMenu" text="Follower" description="">
+      <add-to-group group-id="MainMenu" anchor="last"/>
+        <action id="Myplugin.Starter" class="upper.filefollower.FollowStarter" text="Start following" description=""/>
+        <action id="Myplugin.Stopper" class="upper.filefollower.FollowStopper" text="Stop following" description=""/>
+    </group>
+  </actions>
+
+</idea-plugin>
