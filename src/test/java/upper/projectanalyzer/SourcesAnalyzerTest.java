@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SourcesAnalyzerTest {
 
-    public static final String SRC_FOLDER = "C:\\Users\\odedbotzer\\IdeaProjects\\intellij-sdk-docs\\code_samples\\gradle_plugin_demo\\src\\main\\java";
+    public static final String SRC_FOLDER = "C:\\Users\\odedbotzer\\IdeaProjects\\code-explorer\\src\\main\\java";
     private SourcesAnalyzer dependencyAnalyzer;
     private Set<PackageIdentifier> packages;
 
@@ -30,7 +30,7 @@ public class SourcesAnalyzerTest {
 
     @Test
     public void getDependenciesNotNullTest() {
-        Map<PackageIdentifier, PackageIdentifier> dependencies = dependencyAnalyzer.getDependencies();
+        Map<JavaFileIdentifier, Set<JavaFileIdentifier>> dependencies = dependencyAnalyzer.getDependencies();
         assertFalse(dependencies.isEmpty());
     }
 

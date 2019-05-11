@@ -1,31 +1,32 @@
 package upper.projectanalyzer;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
 import static upper.projectanalyzer.JavaFileAnalyzer.javaFileFilter;
+import static upper.projectanalyzer.JavaFileIdentifier.doesFolderContainJavaFiles;
 
 public class PackageIdentifier {
     final String fullPath;
     private final File fileObj;
 
-    public PackageIdentifier(String fullPath) {
-        fileObj = new File(fullPath);
+    public PackageIdentifier(File folder) {
+        this.fileObj = folder;
+        this.fullPath = folder.getAbsolutePath();
         if (!fileObj.isDirectory())
-            throw new RuntimeException(fullPath + " is not a directory");
-        this.fullPath = fullPath;
+            throw new RuntimeException(this.fullPath + " is not a directory");
+        if (!doesFolderContainJavaFiles(this.fileObj))
+            throw new RuntimeException(this.fullPath + " does not contain java files");
     }
 
-    public File[] getContainedJavaFiles() {
-        return fileObj.listFiles(javaFileFilter);
+    public List<JavaFileIdentifier> getContainedJavaFiles() {
+        return stream(fileObj.listFiles(javaFileFilter))
+                .map(JavaFileIdentifier::new)
+                .collect(Collectors.toList());
     }
-
-
-//    private String folderPathToPackageName(String fullFolderPath) {
-//        return fullFolderPath
-//                .substring(this.srcFolder.getAbsolutePath().length() + File.separator.length())
-//                .replace(File.separator, ".");
-//    }
 
     @Override
     public boolean equals(Object o) {
