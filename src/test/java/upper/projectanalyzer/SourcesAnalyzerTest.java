@@ -10,15 +10,15 @@ import java.util.Set;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class PackageDependencyAnalyzerTest {
+public class SourcesAnalyzerTest {
 
     public static final String SRC_FOLDER = "C:\\Users\\odedbotzer\\IdeaProjects\\intellij-sdk-docs\\code_samples\\gradle_plugin_demo\\src\\main\\java";
-    private PackageDependencyAnalyzer dependencyAnalyzer;
+    private SourcesAnalyzer dependencyAnalyzer;
     private Set<PackageIdentifier> packages;
 
     @Before
     public void calcPackages() {
-        dependencyAnalyzer = new PackageDependencyAnalyzer(new File(SRC_FOLDER));
+        dependencyAnalyzer = new SourcesAnalyzer(new File(SRC_FOLDER));
         packages = dependencyAnalyzer.getSrcPackages();
         packages.stream().forEach(p -> System.out.println(p));
     }
