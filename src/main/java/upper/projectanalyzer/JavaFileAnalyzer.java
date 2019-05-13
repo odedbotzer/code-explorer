@@ -18,6 +18,10 @@ public class JavaFileAnalyzer {
                 .collect(Collectors.toSet());
     }
 
+    static boolean doesFolderContainJavaFiles(File folder) {
+        return folder.list(javaFileFilter).length > 0;
+    }
+
     private static String toImportedClassRelativePath(String importLine) {
         String import_static = "import static ";
         String regular_import = "import ";

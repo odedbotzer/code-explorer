@@ -29,8 +29,14 @@ public class SourcesAnalyzerTest {
     }
 
     @Test
-    public void getDependenciesNotNullTest() {
-        Map<JavaFileIdentifier, Set<JavaFileIdentifier>> dependencies = dependencyAnalyzer.getDependencies();
+    public void getFileDependenciesNotEmptyTest() {
+        Map<JavaFileIdentifier, Set<JavaFileIdentifier>> dependencies = dependencyAnalyzer.getFileDependencies();
+        assertFalse(dependencies.isEmpty());
+    }
+
+    @Test
+    public void getPackageDependenciesNotEmptyTest() {
+        Map<PackageIdentifier, Set<PackageIdentifier>> dependencies = dependencyAnalyzer.getPackageDependencies();
         assertFalse(dependencies.isEmpty());
     }
 

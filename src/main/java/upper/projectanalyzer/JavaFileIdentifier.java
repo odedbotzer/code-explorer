@@ -23,8 +23,8 @@ public class JavaFileIdentifier {
         this(new File(fullPath));
     }
 
-    static boolean doesFolderContainJavaFiles(File folder) {
-        return folder.list(JavaFileAnalyzer.javaFileFilter).length > 0;
+    public PackageIdentifier getPackage() {
+        return new PackageIdentifier(fileObj.getParentFile());
     }
 
     public Reader getFileReader() {

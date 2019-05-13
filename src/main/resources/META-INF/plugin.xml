@@ -15,7 +15,7 @@
     <group id="MyPlugin.SampleMenu" text="Follower" description="">
       <add-to-group group-id="MainMenu" anchor="last"/>
         <action id="Myplugin.Starter" class="upper.filefollower.FollowStarter" text="Start following" description=""/>
-        <action id="Myplugin.Stopper" class="upper.filefollower.FollowStopper" text="Stop following" description=""/>
+        <action id="Myplugin.Stopper" class="upper.testpackage.FollowStopper" text="Stop following" description=""/>
     </group>
   </actions>
 

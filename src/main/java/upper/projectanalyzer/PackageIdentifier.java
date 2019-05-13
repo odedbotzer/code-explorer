@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static upper.projectanalyzer.JavaFileAnalyzer.javaFileFilter;
-import static upper.projectanalyzer.JavaFileIdentifier.doesFolderContainJavaFiles;
+import static upper.projectanalyzer.JavaFileAnalyzer.doesFolderContainJavaFiles;
 
 public class PackageIdentifier {
     final String fullPath;
@@ -26,6 +26,13 @@ public class PackageIdentifier {
         return stream(fileObj.listFiles(javaFileFilter))
                 .map(JavaFileIdentifier::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return "PackageIdentifier{" +
+                "fullPath='" + fullPath + '\'' +
+                '}';
     }
 
     @Override
