@@ -40,4 +40,11 @@ public class SourcesAnalyzerTest {
         assertFalse(dependencies.isEmpty());
     }
 
+    @Test
+    public void getReverseFileDependenciesNotEmptyTest() {
+        JavaFileIdentifier someDependeeFile = dependencyAnalyzer.getFileDependencies().values().iterator().next().iterator().next();
+        Set<JavaFileIdentifier> dependencies = dependencyAnalyzer.getReverseFileDependencies(someDependeeFile);
+        assertFalse(dependencies.isEmpty());
+    }
+
 }

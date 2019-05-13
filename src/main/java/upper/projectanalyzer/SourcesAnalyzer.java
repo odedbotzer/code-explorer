@@ -43,6 +43,13 @@ public class SourcesAnalyzer {
         return fileDependencies;
     }
 
+    public Set<JavaFileIdentifier> getReverseFileDependencies(JavaFileIdentifier toFile) {
+        return getFileDependencies().entrySet().stream()
+                .filter(entry -> entry.getValue().contains(toFile))
+                .map(entry -> entry.getKey())
+                .collect(toSet());
+    }
+
     public Map<PackageIdentifier, Set<PackageIdentifier>> getPackageDependencies() {
         if (packageDependencies == null)
             packageDependencies = analyzeAllPackageDependencies();
@@ -100,8 +107,7 @@ public class SourcesAnalyzer {
     }
 
     private Set<JavaFileIdentifier> getAllImportedPackages(JavaFileIdentifier javaFile) {
-        Set<String> allImportedClassesRelativePath = getAllImportedClassesRelativePath(javaFile);
-        return allImportedClassesRelativePath.stream()
+        return getAllImportedClassesRelativePath(javaFile).stream()
                 .map(this::relativeClassPathToJavaFile)
                 .filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toSet());
