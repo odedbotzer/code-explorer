@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,10 +22,10 @@ import static upper.projectanalyzer.JavaFileAnalyzer.getAllImportedClassesRelati
 
 public class SourcesAnalyzer {
 
+    private final File srcFolder;
     private Map<JavaFileIdentifier, Set<JavaFileIdentifier>> fileDependencies;
     private Map<PackageIdentifier, Set<PackageIdentifier>> packageDependencies;
     private Set<PackageIdentifier> srcPackages;
-    private final File srcFolder;
 
     public SourcesAnalyzer(File srcFolder) {
         validateSrcFolder(srcFolder);
@@ -84,26 +85,27 @@ public class SourcesAnalyzer {
         Map<PackageIdentifier, List<JavaFileIdentifier>> packageToContainedFileMap = getFileDependencies().keySet().stream()
                 .collect(groupingBy(file -> file.getPackage()));
         return packageToContainedFileMap.entrySet().stream()
-                .collect(toMap(map -> map.getKey(), map -> map.getValue().stream()
-                        .map(file -> getFileDependencies().get(file))
-                        .reduce(Sets::union)
-                        .orElse(Sets.newHashSet()) //dependee file set
-                        .stream()
-                        .map(file -> file.getPackage())
-                        .filter(dependeePackage -> !dependeePackage.equals(map.getKey())) //package does not depend upon itself
-                        .collect(toSet()) //dependee package set
-                )).entrySet().stream()
+                .collect(toMap(Map.Entry::getKey, map -> map.getValue().stream()
+                                .map(file -> getFileDependencies().get(file))
+                                .reduce(Sets::union)
+                                .orElse(Sets.newHashSet()) //dependee file set
+                                .stream()
+                                .map(file -> file.getPackage())
+                                .filter(dependeePackage -> !dependeePackage.equals(map.getKey())) //package does not depend upon itself
+                                .collect(toSet()), //dependee package set
+                        Sets::union))
+                .entrySet().stream()
                 .filter(map -> !map.getValue().isEmpty())
-                .collect(toMap(map -> map.getKey(), map -> map.getValue()));
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private Map<JavaFileIdentifier, Set<JavaFileIdentifier>> analyzeAllFileDependencies() {
         return getSrcPackages().stream()
                 .flatMap(packageWithFiles -> packageWithFiles.getContainedJavaFiles().stream())
-                .collect(toMap(javaFile -> javaFile, this::getAllImportedPackages))
+                .collect(toMap(Function.identity(), this::getAllImportedPackages, Sets::union))
                 .entrySet().stream()
                 .filter(map -> !map.getValue().isEmpty())
-                .collect(toMap(map -> map.getKey(), map -> map.getValue()));
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private Set<JavaFileIdentifier> getAllImportedPackages(JavaFileIdentifier javaFile) {

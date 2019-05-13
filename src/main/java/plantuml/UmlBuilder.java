@@ -9,8 +9,6 @@ import upper.projectanalyzer.PackageIdentifier;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toMap;
-
 public class UmlBuilder {
     private Set<PackageIdentifier> packages = Sets.newHashSet();
     private Map<JavaFileIdentifier, Set<JavaFileIdentifier>> fileDependencies = Maps.newHashMap();
@@ -22,19 +20,20 @@ public class UmlBuilder {
     }
 
     public UmlBuilder addFileDependencies(Map<JavaFileIdentifier, Set<JavaFileIdentifier>> fileDependencies) {
-        this.fileDependencies.putAll(fileDependencies);
+        fileDependencies.entrySet().stream()
+                .forEach(dependency -> this.fileDependencies.merge(dependency.getKey(), dependency.getValue(), Sets::union));
         return this;
     }
 
     public UmlBuilder addReverseFileDependencies(Set<JavaFileIdentifier> fromFiles, JavaFileIdentifier toFile) {
-        Map<JavaFileIdentifier, Set<JavaFileIdentifier>> unreversedDependencyMap = fromFiles.stream()
-                .collect(toMap(fromFile -> fromFile, fromFile -> Sets.newHashSet(toFile)));
-        this.fileDependencies.putAll(unreversedDependencyMap);
+        Set<JavaFileIdentifier> toFileSet = Sets.newHashSet(toFile);
+        fromFiles.stream().forEach(fromFile -> this.fileDependencies.merge(fromFile, toFileSet, Sets::union));
         return this;
     }
 
     public UmlBuilder addPackageDependencies(Map<PackageIdentifier, Set<PackageIdentifier>> packageDependencies) {
-        this.packageDependencies.putAll(packageDependencies);
+        packageDependencies.entrySet().stream()
+                .forEach(dependency -> this.packageDependencies.merge(dependency.getKey(), dependency.getValue(), Sets::union));
         return this;
     }
 
